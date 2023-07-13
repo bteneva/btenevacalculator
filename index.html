@@ -2,46 +2,85 @@
 <html>
 <head>
   <title>Renovation Calculator</title>
+  <style>
+    body {
+      font-size: 24px;
+    }
+
+    #results {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <h1>Renovation Calculator</h1>
+  
+  <div>
+    <label for="monthly-tax">Месечна такса за ремонт и обновяване:</label>
+    <input type="number" id="monthly-tax">
+  </div>
+  
+  <div>
+    <label for="inflation">Прогнозна средна инфлация за година в проценти:</label>
+    <input type="number" id="inflation">
+  </div>
+  
+  <div>
+    <label for="apartments">Колко апартамента са в сградата?:</label>
+    <input type="number" id="apartments">
+  </div>
+  
+  <div>
+    <label for="renovation-cost">Колко би струвал ремонта сега?:</label>
+    <input type="number" id="renovation-cost">
+  </div>
+
+  <button onclick="calculate()">Calculate</button>
+
   <div id="results"></div>
 
   <script>
-    let budget = 0;
-    let months = 0;
-    let year = 0;
-    const monthly_tax_renovation = parseFloat(prompt("Месечна такса за ремонт и обновяване:"));
-    const inflation_year = parseFloat(prompt("Прогнозна средна инфлация за година:"));
-    const apartments_count = parseInt(prompt("Колко апартамента са в сградата?:"));
-    let renovation_cost = parseFloat(prompt("Колко би струвал ремонта сега?:"));
+    function calculate() {
+      let budget = 0;
+      let months = 0;
+      let year = 0;
+      let monthly_tax_renovation = parseFloat(document.getElementById('monthly-tax').value);
+      let inflation_year = parseFloat(document.getElementById('inflation').value);
+      let apartments_count = parseInt(document.getElementById('apartments').value);
+      let renovation_cost = parseFloat(document.getElementById('renovation-cost').value);
 
-    while (budget < renovation_cost) {
-      months += 1;
-      budget = months * apartments_count * monthly_tax_renovation;
+      inflation_year = inflation_year * 0.01;
 
-      if (months % 12 === 0) {
-        renovation_cost = renovation_cost * (1 + inflation_year);
-        year += 1;
+      const resultsContainer = document.getElementById('results');
+      resultsContainer.innerHTML = '';
+
+      while (budget < renovation_cost) {
+        months += 1;
+        budget = months * apartments_count * monthly_tax_renovation;
+
+        if (months % 12 === 0) {
+          renovation_cost = renovation_cost * (1 + inflation_year);
+          year += 1;
+        }
       }
+
+      const renovationCostResult = document.createElement('p');
+      renovationCostResult.textContent = `Цена на ремонта след отчитане на инфлацията: ${renovation_cost.toFixed(2)} лева`;
+
+      const savingsTimeResult = document.createElement('p');
+      savingsTimeResult.textContent = `Време за спестяване на пари за ремонта ${year} години ${months % 12} месеца`;
+
+      const totalSavingsResult = document.createElement('p');
+      totalSavingsResult.textContent = `Пари, които са събрани след ${year} години ${months % 12} месеца : ${budget.toFixed(2)} лева`;
+
+      const refreshMessage = document.createElement('p');
+      refreshMessage.textContent = 'Моля, натиснете F5 за ново пресмятане';
+
+      resultsContainer.appendChild(renovationCostResult);
+      resultsContainer.appendChild(savingsTimeResult);
+      resultsContainer.appendChild(totalSavingsResult);
+      resultsContainer.appendChild(refreshMessage);
     }
-
-    // Create result elements
-    const resultsContainer = document.getElementById('results');
-
-    const renovationCostResult = document.createElement('p');
-    renovationCostResult.textContent = `Цена на ремонта след отчитане на инфлацията: ${renovation_cost.toFixed(2)} лева`;
-
-    const savingsTimeResult = document.createElement('p');
-    savingsTimeResult.textContent = `Време за спестяване на пари за ремонта ${year} години ${months % 12} месеца`;
-
-    const totalSavingsResult = document.createElement('p');
-    totalSavingsResult.textContent = `Пари, които са събрани след ${year} години ${months % 12} месеца : ${budget.toFixed(2)} лева`;
-
-    // Append results to container
-    resultsContainer.appendChild(renovationCostResult);
-    resultsContainer.appendChild(savingsTimeResult);
-    resultsContainer.appendChild(totalSavingsResult);
   </script>
 </body>
 </html>
