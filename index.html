@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Renovation Calculator</title>
+</head>
+<body>
+  <h1>Renovation Calculator</h1>
+  <div id="results"></div>
+
+  <script>
+    let budget = 0;
+    let months = 0;
+    let year = 0;
+    const monthly_tax_renovation = parseFloat(prompt("Месечна такса за ремонт и обновяване:"));
+    const inflation_year = parseFloat(prompt("Прогнозна средна инфлация за година:"));
+    const apartments_count = parseInt(prompt("Колко апартамента са в сградата?:"));
+    let renovation_cost = parseFloat(prompt("Колко би струвал ремонта сега?:"));
+
+    while (budget < renovation_cost) {
+      months += 1;
+      budget = months * apartments_count * monthly_tax_renovation;
+
+      if (months % 12 === 0) {
+        renovation_cost = renovation_cost * (1 + inflation_year);
+        year += 1;
+      }
+    }
+
+    // Create result elements
+    const resultsContainer = document.getElementById('results');
+
+    const renovationCostResult = document.createElement('p');
+    renovationCostResult.textContent = `Цена на ремонта след отчитане на инфлацията: ${renovation_cost.toFixed(2)} лева`;
+
+    const savingsTimeResult = document.createElement('p');
+    savingsTimeResult.textContent = `Време за спестяване на пари за ремонта ${year} години ${months % 12} месеца`;
+
+    const totalSavingsResult = document.createElement('p');
+    totalSavingsResult.textContent = `Пари, които са събрани след ${year} години ${months % 12} месеца : ${budget.toFixed(2)} лева`;
+
+    // Append results to container
+    resultsContainer.appendChild(renovationCostResult);
+    resultsContainer.appendChild(savingsTimeResult);
+    resultsContainer.appendChild(totalSavingsResult);
+  </script>
+</body>
+</html>
